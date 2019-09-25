@@ -1,0 +1,77 @@
+编写一个函数来查找字符串数组中的最长公共前缀。
+
+如果不存在公共前缀，返回空字符串 ""。
+
+示例 1:
+
+输入: ["flower","flow","flight"]
+输出: "fl"
+
+示例 2:
+
+输入: ["dog","racecar","car"]
+输出: ""
+解释: 输入不存在公共前缀。
+
+说明:
+
+所有输入只包含小写字母 a-z 。
+
+
+解法：
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+        
+        if(strs.size() == 0)
+        {
+            return "";
+        }
+
+        size_t min_size = strs.front().size();
+        string min_str = strs.front();
+
+        for(const auto&str:strs)
+        {
+            if(min_size > str.size())
+            {
+                min_size = str.size();
+                min_str = str;
+            }
+        }
+        if(min_size == 0)
+        {
+            return "";
+        }
+
+        string out_str = "";
+        size_t i = 0;
+        while(i < min_size)
+        {
+            char letter = min_str[i];
+            int same_flag = 1;
+            for(const auto&str:strs)
+            {
+                if(letter != str[i])
+                {
+                    same_flag = 0;
+                    break;
+                }
+            }
+
+            if(same_flag == 1)
+            {
+                out_str.push_back(letter);
+                i++;
+                continue;
+            }
+            break;
+        }
+
+        return out_str;
+    }
+};
+
+思路：考虑优先寻找最小字符，然后在其基础上进行纵向比较，如果不同则返回之前的字符，否则继续向后比较。算法复杂度O(S),S为所有字符串字符总和。
+
+官方题解：还有二分搜索，分治法等等。
