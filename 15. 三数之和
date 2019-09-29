@@ -1,0 +1,53 @@
+给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。
+
+注意：答案中不可以包含重复的三元组。
+
+例如, 给定数组 nums = [-1, 0, 1, 2, -1, -4]，
+
+满足要求的三元组集合为：
+[
+  [-1, 0, 1],
+  [-1, -1, 2]
+]
+
+答案：
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        
+        sort(nums.begin(),nums.end());
+        vector<vector<int> >res;   
+        int _size=nums.size();    
+        if(_size<3||nums.front()>0||nums.back()<0)
+        return res;
+        int i,j,k;
+        for(k=0;k<=_size-3;k++){
+        	if(nums[k]>0)
+        	    break;
+        	if(k>0&&nums[k]==nums[k-1])
+        		continue;                               //跳过无意义移动
+        	i=k+1;j=_size-1;
+        	while(i<j){
+        		if(nums[i]+nums[j]+nums[k]>0)
+        		    j--;
+        		else if(nums[i]+nums[j]+nums[k]<0)
+        		    i++;
+        		else{
+        			res.push_back({nums[i],nums[j],nums[k]});
+        			while(i<j&&nums[i]==nums[i+1])      //跳过无意义移动
+        			    i++;
+        			while(i<j&&nums[j]==nums[j-1])      //同上
+        			    j--;
+        			i++;
+        			j--;           //这里可以两边同时缩近，缩一边没啥用hahaha。
+				}
+			}
+		}
+		return res;
+    }
+};
+
+感想：1，有时候，对一个乱序的数组进行处理前，先进行排序，有助于后面算法的实施。
+    2，使用双指针进行压缩搜索，再结合部分归纳总结规律，能有效减少运算量。
+    
+    在做这个题目的时候，出现了多次指针溢出情况，果然基本功还有待加强啊 - -。
