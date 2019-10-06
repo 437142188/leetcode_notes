@@ -4,4 +4,53 @@
 
 与 target 最接近的三个数的和为 2. (-1 + 2 + 1 = 2).
 
+解答：
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+     
+        sort(nums.begin(),nums.end());
+        
+        if(nums.size() == 3)
+        {
+            return nums[0]+nums[1]+nums[2];
+        }
+        
+        int total_size = nums.size();
+        int i=0,j,k;
+        int min_error = nums[0]+nums[1]+nums[2]-target;
+        for(;i <= total_size -3;i++)
+        {
+            j = i + 1;
+            k = total_size - 1;
+            
+            while(j<k)
+            {
+                int error = nums[i]+nums[j]+nums[k]-target;
+                if(fabs(min_error) > fabs(error))
+                {
+                    min_error = error;       
+                }
+                if(error > 0)
+                {
+                    k--;
+                }
+                else if(error < 0)
+                {
+                    j++;
+                }
+                else
+                {
+                    return target;
+                }
+            }
+        }
+        
+        return min_error + target;
+    }
+};
 
+思路：1、先进行排序，减小后续执行复杂度。
+     2、再使用双指针方法进行包夹搜索，如果误差大于0，则最右边指针k--;如果误差小于0，则中间指针j++;如果等于0，则直接输出。
+     3、复杂度，排序O(nlogn)最外层for循环，O(n),里面while循环，O(n)，总复杂度：O(nlogn)+O(n)*O(n)=O(n2)
+     
