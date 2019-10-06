@@ -1,0 +1,60 @@
+给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。
+
+给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
+
+
+
+示例:
+
+输入："23"
+输出：["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
+说明:
+尽管上面的答案是按字典序排列的，但是你可以任意选择答案输出的顺序。
+
+解答：
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        map<char,string> tables={{'2',"abc"},{'3',"def"},{'4',"ghi"},{'5',"jkl"},{'6',"mno"},{'7',"pqrs"},{'8',"tuv"},{'9',"wxyz"}};
+        
+        vector<string> out;
+        
+        int total_size = digits.size();
+        queue<string> que;
+        
+        for(int i=0;i<tables[digits.front()].size();i++)
+        {
+            string s ={tables[digits.front()][i]};
+            que.push(s);
+        }
+        
+        for(int i=1;i<total_size;i++)
+        {
+            int length = que.size();
+            while(length--)
+            {
+                for(int j=0;j<tables[digits[i]].size();j++)
+                {
+                    string s = que.front();
+                    s += tables[digits[i]][j];
+                    que.push(s);
+                }
+
+                que.pop();
+            }
+
+        }
+        
+        while(!que.empty())
+        {
+            out.push_back(que.front());
+            que.pop();
+        }
+        
+        return out;
+    }
+};
+
+思路：1、排列问题，类别很多，思路很简单，但是要输出这样的类别，却有点麻烦
+     2、考虑使用队列的方法，先用第一个数字对应的字母序列初始化队列，然后依次将出队的字符串与新的字符组成新的字符串，再入队。
+     3、复杂度分析：属于组合问题，时间复杂度O(2^n),空间复杂度O(2^n)
