@@ -1,0 +1,138 @@
+给定一个包含 n 个整数的数组 nums 和一个目标值 target，判断 nums 中是否存在四个元素 a，b，c 和 d ，使得 a + b + c + d 的值与 target 相等？找出所有满足条件且不重复的四元组。
+
+注意：
+
+答案中不可以包含重复的四元组。
+
+示例：
+
+给定数组 nums = [1, 0, -1, 0, -2, 2]，和 target = 0。
+
+满足要求的四元组集合为：
+[
+  [-1,  0, 0, 1],
+  [-2, -1, 1, 2],
+  [-2,  0, 0, 2]
+]
+
+初始解答：
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        
+        sort(nums.begin(),nums.end());
+        
+        int i=0,j,k,l=nums.size()-1;
+        vector<vector<int>> out;
+        
+        
+        while(i < l - 2)
+        {
+            j = i + 1;
+            k = l - 1;
+            
+            if(nums[i] > target || nums[l] < target)
+            {
+                break;
+            }
+            
+            
+            int first_sum = nums[i] + nums[j] + nums[k] + nums[l];
+            
+            while(j < k)
+            {
+                int sum = nums[i] + nums[j] + nums[k] + nums[l];
+                
+                if(sum == target)
+                {
+                    vector<int> temp = {nums[i],nums[j],nums[k],nums[l]};
+                    out.push_back(temp);
+                    
+                    while(j < k-1)
+                    {
+                        if(nums[j] != nums[j+1])
+                        {
+                            break;
+                        }
+                        j++;
+                    }
+                    while(j < k-1)
+                    {
+                        if(nums[k] != nums[k-1])
+                        {
+                            break;
+                        }
+                        k--;
+                    }
+                    
+                    j++;
+                    k--;
+                }
+                else if(sum < target)
+                {
+                    j++;
+                }
+                else
+                {
+                    k--;
+                }
+            }
+            
+            if(first_sum == target)
+            {
+                i++;
+                l--;
+            }
+            else if(first_sum < target)
+            {
+                i++;
+            }
+            else
+            {
+                l--;
+            }
+        }
+        
+        return out;
+    }
+};
+
+思路：沿用三数之和的思路，但是思路对于处理四个数字时候，双指针不够用了。需要改进。
+
+改良后得代码：
+class Solution{
+	public: 
+	vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        sort(nums.begin(),nums.end());
+        vector<vector<int> > res;
+        if(nums.size()<4)
+        return res;
+        int a,b,c,d,_size=nums.size();
+        for(a=0;a<=_size-4;a++){
+        	if(a>0&&nums[a]==nums[a-1]) continue;      //确保nums[a] 改变了
+        	for(b=a+1;b<=_size-3;b++){
+        		if(b>a+1&&nums[b]==nums[b-1])continue;   //确保nums[b] 改变了
+        		c=b+1,d=_size-1;
+        		while(c<d){
+        			if(nums[a]+nums[b]+nums[c]+nums[d]<target)
+        			    c++;
+        			else if(nums[a]+nums[b]+nums[c]+nums[d]>target)
+        			    d--;
+        			else{
+        				res.push_back({nums[a],nums[b],nums[c],nums[d]});
+        				while(c<d&&nums[c+1]==nums[c])      //确保nums[c] 改变了
+        				    c++;
+        				while(c<d&&nums[d-1]==nums[d])      //确保nums[d] 改变了
+        				    d--;
+        				c++;
+        				d--;
+					}
+				}
+			}
+		}
+		return res;
+    }
+};
+
+思路：1、内部沿用三数之和的思路，然后在最外层再增加一个for循环，遍历整个vector-3,，不知道有没有更好的方法。
+     2、算法复杂度：O(n^3)
