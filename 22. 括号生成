@@ -1,0 +1,97 @@
+给出 n 代表生成括号的对数，请你写出一个函数，使其能够生成所有可能的并且有效的括号组合。
+
+例如，给出 n = 3，生成结果为：
+
+[
+  "((()))",
+  "(()())",
+  "(())()",
+  "()(())",
+  "()()()"
+]
+
+代码：
+class Solution {
+public:
+    vector<string> generateParenthesis(int n) {
+        
+        string parenthese = "()";
+        
+        vector<string> out;
+        
+        if(!n)
+        {
+            return out;
+        }
+        
+        out.push_back(parenthese);
+        vector<string> out1_temps = out;
+        for(int i = 1;i < n;i++)
+        {
+            out1_temps = out;
+            for(const auto& out1_temp:out1_temps)
+            {
+                string temp = out1_temp;
+                for(int j =0;j < temp.size();j++)
+                {
+                    string s = temp;
+                    s.insert(j,parenthese);
+
+                    bool repeat_flag = false;
+                    for(const auto&out_temp:out)
+                    {
+                        if(s == out_temp)
+                        {
+                            repeat_flag = true; 
+                        }
+                    }
+                    if(repeat_flag == false)
+                    {
+                        out.push_back(s);
+                    }
+                }
+            }
+        }
+        
+        vector<string> final_out;
+        for(const auto&s:out)
+        {
+            if(s.size() == 2*n)
+            {
+                final_out.push_back(s);
+            }
+        }
+        
+        return final_out;
+    }
+};
+
+思路：最开始想到的是暴力枚举方法，先生成当n=0时候所有的解，再在他的基础上，在每一个string的字符缝隙中插入"()"符号，最后在所有有效解中提取出字符串长度为2n的解。
+算法复杂度：O(n^4)（待验证。。），运算时间太长
+
+参考思路：（暴力构造法+剪枝）
+首先分析：需要构造有效的括号，数量上，左右括号分别都为n个。
+其次：左括号的数量需要大于等于右括号的数量，
+
+由两个前提可写出如下代码，从空串中逐步递归添加左右括号，
+1.如果右括号比左括号多，说明无效则返回
+2.如果左括号数量超过N，则与题意不符，返回
+3.如果左右括号都达到了指定数量，则可以将其添加到数组中保存
+4.如果以上条件都没有满足，则尝试加入新的左括号和右括号
+
+参考代码：
+vector<string> ans;int N;
+void dfs(int l,int r,string has){
+    if(r>l)return;
+    if(l > N)return;
+    if(l == r&& r == N){
+        ans.push_back(has);return;
+    }
+    dfs(l+1,r,has + "(");
+    dfs(l,r+1,has + ")");
+}
+vector<string> generateParenthesis(int n) {
+    N=n;if(!N)return {};
+    dfs(0,0,"");
+    return ans;
+}
