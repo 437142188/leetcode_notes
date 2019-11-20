@@ -15,3 +15,27 @@
 当 needle 是空字符串时，我们应当返回什么值呢？这是一个在面试中很好的问题。
 
 对于本题而言，当 needle 是空字符串时我们应当返回 0 。这与C语言的 strstr() 以及 Java的 indexOf() 定义相符。
+
+代码：
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        if(needle.size() == 0)
+            return 0;
+        if(haystack.size() < needle.size())
+            return -1;
+        
+        for(size_t i=0;i < haystack.size() - needle.size() + 1;i++)
+        {
+            if(haystack.substr(i,needle.size()) == needle)
+                return i;
+        }
+        return -1;
+    }
+};
+
+思路：逐位从haystack中获取needle大小的子字符串，然后跟needle对比，属于暴力匹配算法
+算法复杂度：O(n*m),其中，n为haystack的大小，m为needle的大小
+
+改进：使用kmp算法，先构建一个状态机，根据当前状态以及下一个匹配的字符来进行状态切换，该算法的复杂点在于如何构建这个有限状态机
+算法复杂度：时间复杂度O(n)，空间复杂度O（m）。
