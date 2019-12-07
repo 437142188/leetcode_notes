@@ -1,0 +1,153 @@
+给定一个只包含 '(' 和 ')' 的字符串，找出最长的包含有效括号的子串的长度。
+
+示例 1:
+
+输入: "(()"
+输出: 2
+解释: 最长有效括号子串为 "()"
+
+示例 2:
+
+输入: ")()())"
+输出: 4
+解释: 最长有效括号子串为 "()()"
+
+代码（超时）：
+class Solution {
+public:
+    bool isValid(string s) {
+        
+        string temp;
+        map<char,char> tables = {{'(',')'}};
+        for(int i = 0;i < s.size();i++)
+        {
+            if(temp.size() == 0)
+            {
+                temp.push_back(s[i]);
+            }
+            else if(tables[temp.back()] != s[i])
+            {
+                temp.push_back(s[i]);
+            }
+            else
+            {
+                temp.pop_back();
+            }
+        }
+        
+        return temp.size() > 0? false:true;
+    }
+    
+    int longestValidParentheses(string s) {
+        if(s.size() == 0 || s.size() == 1)
+            return 0;
+        
+        for(int i = (s.size() %2 ?s.size()-1:s.size());i > 1;i -= 2 )
+        {
+            for(int j = 0; j <= s.size() - i;j++)
+            {
+                if(isValid(s.substr(j,i)) == true)
+                {
+                    return i;
+                }
+            }
+        }
+        
+        return 0;
+    }
+};
+
+思路：使用子字符串＋检查是否有效的方法，然而遇到输入字符串过长，会出现超时
+算法复杂度：O(n^3)
+
+改进思路：
+解题思路一：常规
+
+对于这种括号匹配问题，一般都是使用栈
+
+我们先找到所有可以匹配的索引号，然后找出最长连续数列！
+
+例如：s = )(()())，我们用栈可以找到，
+
+位置 2 和位置 3 匹配，
+
+位置 4 和位置 5 匹配，
+
+位置 1 和位置 6 匹配，
+
+这个数组为：2,3,4,5,1,6 这是通过栈找到的，我们按递增排序！1,2,3,4,5,6
+
+找出该数组的最长连续数列的长度就是最长有效括号长度！
+
+所以时间复杂度来自排序：O(nlogn)。
+
+接下来我们思考，是否可以省略排序的过程,在弹栈时候进行操作呢?
+
+直接看代码理解!所以时间复杂度为：O(n)。
+解题思路二：dp 方法
+
+我们用 dp[i] 表示以 i 结尾的最长有效括号；
+
+    当 s[i] 为 (,dp[i] 必然等于 0，因为不可能组成有效的括号；
+
+    那么 s[i] 为 )
+
+    2.1 当 s[i-1] 为 (，那么 dp[i] = dp[i-2] + 2；
+
+    2.2 当 s[i-1] 为 ) 并且 s[i-dp[i-1] - 1] 为 (，那么 dp[i] = dp[i-1] + 2 + dp[i-dp[i-1]-2]；
+
+时间复杂度：O(n)。
+
+思路１代码：
+class Solution {
+public:
+    int longestValidParentheses(string s) 
+    {
+        stack<char> vec;
+        stack<int> num;
+        vector<int> pos;
+        int maxlen=0;
+        int len=0;
+        if(s.size()<=1) return 0;
+        for(int i=0;i<s.size();i++)
+        {
+            if(!vec.empty())
+            {
+                if(vec.top()=='('&&s[i]==')')
+                {
+                    pos.push_back(num.top());
+                    pos.push_back(i);
+                    //cout<<num.top()<<endl;
+                    //cout<<i<<endl;
+                    vec.pop();
+                    num.pop();
+                }
+                else
+                {
+                    num.push(i);
+                    vec.push(s[i]);
+                }
+            }
+            else
+            {
+                num.push(i);
+                vec.push(s[i]);
+            }
+        }
+        sort(pos.begin(),pos.end());
+        for(int i=0;i<pos.size();i++)
+        {
+            cout<<pos[i]<<endl;
+            if(i!=0&&pos[i]-pos[i-1]==1)
+            {
+                len=len+1;
+                maxlen=max(len,maxlen);
+            }
+            else
+            {
+                len=1;
+            }
+        }
+        return maxlen;
+    }
+};
