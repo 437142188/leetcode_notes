@@ -1,0 +1,81 @@
+给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+
+你的算法时间复杂度必须是 O(log n) 级别。
+
+如果数组中不存在目标值，返回 [-1, -1]。
+
+示例 1:
+
+输入: nums = [5,7,7,8,8,10], target = 8
+输出: [3,4]
+
+示例 2:
+
+输入: nums = [5,7,7,8,8,10], target = 6
+输出: [-1,-1]
+
+思路：
+分为两步,1,先用二分查找找出与目标值相等的下标。2,在目标值下标附近搜索左边界和右边界。
+
+代码：
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        int left_index =0,right_index = nums.size()-1;
+        int target_index = -1;
+        
+        if(right_index == -1)
+            return {-1,-1};
+        
+        while(left_index <= right_index)
+        {
+            int middle_index = (left_index + right_index)/2;
+            
+            if(nums.at(middle_index) > target)
+            {
+                right_index = middle_index - 1;
+            }
+            else if(nums.at(middle_index) < target)
+            {
+                left_index = middle_index + 1;
+            }
+            else
+            {
+                target_index = middle_index;
+                break;
+            }
+        }
+        
+        if(target_index == -1)
+            return {-1,-1};
+        
+        int target_l_index = target_index,target_r_index = target_index;
+        while(target_l_index-1 >=0)  
+        {
+            if(nums.at(target_l_index-1) == target)
+            {
+                target_l_index--;
+            }
+            else
+            {
+                break;
+            }
+
+        }
+        while(target_r_index+1 <=nums.size()-1)  
+        {
+            if(nums.at(target_r_index+1) == target )
+            {
+                target_r_index++;
+            }
+            else
+            {
+                break;
+            }
+        }
+        
+        return {target_l_index,target_r_index};
+    }
+};
+
+算法复杂度：二分查找复杂度为O(logn)
