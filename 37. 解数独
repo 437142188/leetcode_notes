@@ -1,0 +1,99 @@
+编写一个程序，通过已填充的空格来解决数独问题。
+
+一个数独的解法需遵循如下规则：
+
+    数字 1-9 在每一行只能出现一次。
+    数字 1-9 在每一列只能出现一次。
+    数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+
+空白格用 '.' 表示。
+
+一个数独。
+
+答案被标成红色。
+
+Note:
+
+    给定的数独序列只包含数字 1-9 和字符 '.' 。
+    你可以假设给定的数独只有唯一解。
+    给定数独永远是 9x9 形式的。
+
+思路：使用尝试＋回溯法。先用set数组将行、列、宫的可放入数筛选出来。然后从第0个格子依次尝试遍历可放入的数字。如果数字可以放入，则对相应的ｓｅｔ数组erase掉，然后继续递归
+下一个格子；如果数字不可以放入，则进行回溯，将当前的格子对应的状态还原。当最终成功递归完最后一个格子，置高全局flag，递归结束。
+
+代码：
+class Solution {
+public:
+    
+    vector<set<int>> line, column, block;
+    
+    void update( vector<vector<char>>& board)
+    {
+        set<int> compare = {1,2,3,4,5,6,7,8,9};
+        for( int i = 0; i < 9; i++)
+            line.push_back( compare), column.push_back( compare), block.push_back( compare); 
+        
+        for( int i = 0; i < 9; i++)
+            for( int j = 0; j < 9; j++)
+                if( board[i][j] != '.'){
+                    int t = board[i][j] - '0';
+                    line[i].erase( t),  column[j].erase(t), block[i / 3 + j / 3 * 3].erase(t); 
+                }
+        
+        return ;
+    }
+    
+    bool check(const int& i, const int& j, int num)
+    {
+        if( line[i].find( num) != line[i].end()
+         && column[j].find( num) != column[j].end()
+         && block[i/3 + j/3*3].find( num) != block[i/3 + j/3*3].end())
+            return true;
+        return false;
+    }
+
+    int complete_flag = 0;
+    
+    void dfs( vector<vector<char>>& board, int count){
+        if( count == 81){
+            complete_flag = 1;
+            return ;
+        }
+            
+
+        int i = count / 9, j = count % 9;
+        
+        if( board[i][j] == '.'){
+            for( int k = 1; k < 10; k++)
+                if( check(i, j, k))
+                {
+                    line[i].erase( k), column[j].erase( k), block[ i /3 + j/3*3].erase( k);
+                    
+                    board[i][j] = k + '0';
+                    dfs( board, count + 1);
+                    
+                    if( !complete_flag){
+                        line[i].insert( k), column[j].insert( k), block[ i /3 + j/3*3].insert( k);
+                        board[i][j] = '.';
+                    }
+                    else
+                        return ;
+                }
+        }
+        else
+            dfs( board, count + 1);
+            
+        return ;
+    }
+
+    
+    void solveSudoku(vector<vector<char>>& board) {
+        update(board);
+        
+        int count = 0;
+        dfs(board,count);
+    }
+};
+
+算法复杂度：
+时间复杂度：O((9!)^9)
