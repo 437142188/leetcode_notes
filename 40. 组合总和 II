@@ -1,0 +1,74 @@
+给定一个数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+
+candidates 中的每个数字在每个组合中只能使用一次。
+
+说明：
+
+    所有数字（包括目标数）都是正整数。
+    解集不能包含重复的组合。 
+
+示例 1:
+
+输入: candidates = [10,1,2,7,6,1,5], target = 8,
+所求解集为:
+[
+  [1, 7],
+  [1, 2, 5],
+  [2, 6],
+  [1, 1, 6]
+]
+
+示例 2:
+
+输入: candidates = [2,5,2,1,2], target = 5,
+所求解集为:
+[
+  [1,2,2],
+  [5]
+]
+
+代码：
+class Solution {
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+
+        candi_ = candidates;
+        std::sort(candi_.begin(),candi_.end());
+        
+        
+        find(0,target);    
+        
+        return out_array_;
+    }
+    
+    void find(int start_index,int left_value){
+        if(left_value == 0)
+        {
+            out_array_.push_back(out_);
+            return;
+        }
+        
+        for(int i= start_index;i < candi_.size() && left_value >= candi_[i];i++)
+        {
+            if(i > start_index)
+            {
+                if(candi_[i] == candi_[i-1])
+                    continue;
+            }
+            out_.push_back(candi_[i]);
+            find(i+1,left_value - candi_[i]);
+            out_.pop_back();
+        }
+        
+    }
+    
+    private:
+            std::vector<std::vector<int>> out_array_;
+            std::vector<int> out_;
+            std::vector<int> candi_;
+    
+    
+};
+
+思路：仍然使用回溯递归加剪枝，只要知道了剪枝的条件，代码就好写了，为了简化后面处理的复杂度，仍然优先对数据进行排列。
+算法复杂度：O(n^2)
