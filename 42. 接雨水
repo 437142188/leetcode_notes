@@ -1,0 +1,46 @@
+给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
+
+
+
+上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。 感谢 Marcos 贡献此图。
+
+示例:
+
+输入: [0,1,0,2,1,0,1,3,2,1,2,1]
+输出: 6
+
+
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int sum_water = 0;
+        int left_max_array[height.size()],right_max_array[height.size()];
+        
+        if(height.size() ==0)
+            return 0;
+        
+        left_max_array[0] = 0;
+        right_max_array[height.size()-1] = 0;
+        
+        for(int i =1;i<height.size()-1;i++)
+        {
+            left_max_array[i] = max(left_max_array[i-1],height.at(i-1));
+        }
+        for(int i =height.size() -2;i > 0;i--)
+        {
+            right_max_array[i] = max(right_max_array[i+1],height.at(i+1));
+        }
+
+        for(int i = 1;i < height.size() - 1;i++)
+        {
+            int min_num = min(left_max_array[i],right_max_array[i]);
+            if(height.at(i) < min_num)
+                sum_water += min_num - height.at(i);
+        }
+        return sum_water;
+    }
+};
+
+思路：利用动态规划方法，先求出每一列左边的最高值和右边的最高值，然后再取这两个值的较小值，如果该值大于当前列的值，则认为有水。
+算法时间复杂度：O(n)
+算法空间复杂度：O(n)
