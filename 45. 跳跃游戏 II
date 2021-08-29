@@ -1,0 +1,39 @@
+给你一个非负整数数组 nums ，你最初位于数组的第一个位置。
+
+数组中的每个元素代表你在该位置可以跳跃的最大长度。
+
+你的目标是使用最少的跳跃次数到达数组的最后一个位置。
+
+假设你总是可以到达数组的最后一个位置。
+
+解答：
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+
+        int size = nums.size();
+        vector<int> result(size,0);
+
+        for(int i = 1;i < size;i++){
+            int min_f = size;
+            for(int j = 1 ;j <= i;j++){
+                if(nums[i-j] >= j)
+                {
+                    if(min_f > result[i-j] + 1){
+                        min_f = result[i-j] + 1;
+                    }
+                }
+            }
+            result[i] = min_f;
+        }
+
+        return result[size-1];
+
+    }
+};
+
+思路：使用动态规划，设f(n)为当前位置的最少跳跃次数，则f(n)等于他的前f(n-i)中，能到达f(n)的最小值，再+1，初始条件为f(0) = 0.
+时间复杂度：O(n^2)
+空间复杂度：O(n)
+
+优化思路：该题可以使用贪心算法来计算，时间复杂度和空间复杂度都可以缩小一个数量级
