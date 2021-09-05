@@ -1,0 +1,45 @@
+给定一个可包含重复数字的序列 nums ，按任意顺序 返回所有不重复的全排列。
+
+
+解答：
+class Solution {
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        vector<vector<int>> result;
+        vector<bool> used(nums.size(),false);
+        vector<int> temp;
+        proc(0,result,temp,nums,used);
+
+        return result;
+    }
+
+    void proc(int i,vector<vector<int>> &result,vector<int>& temp,vector<int>& nums,vector<bool> &used){
+        if(i == nums.size()){
+            //use too many time ,to optimize
+            // for(const auto& result_vec:result){
+            //     if(result_vec == temp){
+            //         return;
+            //     }
+            // }
+            result.push_back(temp);
+            return;
+        }
+
+        for(int j = 0;j < nums.size();j++){
+            if(used[j] == true)
+                continue;
+            if(j > 0 && used[j-1] == true && nums[j] == nums[j-1])
+                continue;
+            used[j] = true;
+            temp.push_back(nums[j]);
+            proc(i+1,result,temp,nums,used);
+            temp.pop_back();
+            used[j] = false;
+        }
+    }
+};
+
+思路：回溯+剪枝，对于重复数据的问题，通常先进行排序，再处理。找到剪枝条件就很容易了。本题的剪枝条件是当前数据与前一个一样并且前一个数据使用了。
+时间复杂度:O(n*n!)
+空间复杂度:O(n!)
