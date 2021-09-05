@@ -1,0 +1,36 @@
+给定一个不含重复数字的数组 nums ，返回其 所有可能的全排列 。你可以 按任意顺序 返回答案。
+
+解答：
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> result;
+        vector<bool> used(nums.size(),false);
+        vector<int> temp;
+        proc(0,result,temp,nums,used);
+
+
+        return result;
+    }
+
+    void proc(int i,vector<vector<int>> &result,vector<int>& temp,vector<int>& nums,vector<bool> &used){
+        if(i == nums.size()){
+            result.push_back(temp);
+            return;
+        }
+
+        for(int j = 0;j < nums.size();j++){
+            if(used[j] == true)
+                continue;
+            used[j] = true;
+            temp.push_back(nums[j]);
+            proc(i+1,result,temp,nums,used);
+            temp.pop_back();
+            used[j] = false;
+        }
+    }
+};
+
+思路：返回全排列的题目解题思路使用回溯，借助树形结构，设计合适的for循环和终止条件即可。
+时间复杂度：O(n*n!) 回溯算法的时间复杂度为n!，回溯算法中for循环为n次
+空间复杂度：O(n!)
