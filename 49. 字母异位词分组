@@ -1,0 +1,70 @@
+给你一个字符串数组，请你将 字母异位词 组合在一起。可以按任意顺序返回结果列表。
+
+字母异位词 是由重新排列源单词的字母得到的一个新单词，所有源单词中的字母都恰好只用一次
+
+解答：
+class Solution {
+public:
+    static bool sort_fun(string a,string b){return a.size() < b.size();}
+
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        vector<string> sort_strs = strs;
+        sort(sort_strs.begin(),sort_strs.end(),sort_fun);
+
+        vector<string> group;
+        vector<string> sort_group;
+        vector<vector<string>> result;
+        if(sort_strs.size() == 0)
+            return result;
+        group.push_back(sort_strs.front());
+        result.push_back(group);
+        sort(group.front().begin(),group.front().end());
+        sort_group.push_back(group.front());
+
+        int last_index = 0;
+        for(int i = 1;i <sort_strs.size();i++){
+            bool has_same_group = false;
+            if(sort_strs[i].size() != sort_strs[i-1].size()){
+                last_index = result.size();
+            }
+            else{
+                for(int j = last_index;j < sort_group.size();j++){
+                    if(check_one_group(sort_group[j],sort_strs[i]) == true){
+                        result[j].push_back(sort_strs[i]);
+                        has_same_group = true;
+                        break;
+                    }
+                }
+            }   
+            if(has_same_group == true){
+                continue;
+            }
+
+            group.clear();
+            group.push_back(sort_strs[i]);
+            result.push_back(group);
+            sort(group.front().begin(),group.front().end());
+            sort_group.push_back(group.front());
+
+        }
+
+        return result;
+    }
+
+
+    bool check_one_group(string group,string check){
+        sort(check.begin(),check.end());
+        if(group != check)
+            return false;
+        return true;
+
+    }
+};
+
+思路：先对输入进行排序，再逐个比较。
+时间复杂度：O(n^2*klongk)
+空间复杂度：O(n*k)
+
+改进思路：对输入进行排序后，使用哈希表，其中键值为排序的字符串。这样可以有效降低查找时间
+时间复杂度：O(nklongk)
+空间复杂度：O(n*k)
