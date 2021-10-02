@@ -1,0 +1,80 @@
+n 皇后问题 研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。
+
+给你一个整数 n ，返回所有不同的 n 皇后问题 的解决方案。
+
+每一种解法包含一个不同的 n 皇后问题 的棋子放置方案，该方案中 'Q' 和 '.' 分别代表了皇后和空位。
+
+解答:
+/*
+ * @lc app=leetcode.cn id=51 lang=cpp
+ *
+ * [51] N 皇后
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector<vector<string>> solveNQueens(int n) {
+        vector<vector<string>> results;
+        vector<string> result;
+        string temp;
+        for(int i=0;i < n;i++){
+            temp.push_back('.');
+        }
+        for(int i=0;i < n;i++){
+            result.push_back(temp);
+        }
+
+        recall(0,n,result,results);
+
+        return results;
+    }
+
+    void recall(int cur_row,int n,vector<string>& result,
+        vector<vector<string>>& results){
+        if(cur_row == n){
+            results.push_back(result);
+            return;
+        }
+
+
+        for(int cur_col = 0;cur_col < n;cur_col++){
+            if(can_put(cur_row,cur_col,n,result)){
+                result[cur_row].at(cur_col) = 'Q';
+                recall(cur_row + 1,n,result,results);
+                result[cur_row].at(cur_col) = '.';
+            }
+        }
+    }
+
+    bool can_put(int cur_row,int cur_col,int n,const vector<string>& result){
+        //check up
+        for(int i=0;i < cur_row;i++){
+            if(result[i].at(cur_col) == 'Q'){
+                return false;
+            }
+        }
+
+
+        //check up left and right
+        for(int row = cur_row-1,coll = cur_col-1,colr = cur_col + 1;
+            row >= 0;row--,coll--,colr++){
+            
+            if(coll >= 0 && result[row].at(coll) == 'Q'){
+                return false;
+            }
+
+            if(colr <= n-1 && result[row].at(colr) == 'Q'){
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+// @lc code=end
+
+思路:典型的回溯法,跟数独相似
+时间复杂度:O(n!)
+空间复杂度:O(n^2)
+
