@@ -1,0 +1,24 @@
+给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+
+解答:
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+
+        int max_sum = nums[0];
+        int pre_sum = 0;
+        for(int i = 0;i < nums.size();i++){
+            pre_sum = max(nums[i],pre_sum + nums[i]);
+            max_sum = max(max_sum,pre_sum);
+        }
+
+        return max_sum;
+    }
+};
+
+思路:1使用动态规划,设f(i)为(0~i)的最大子序列的和,则递推公式为f(i) = max(nums[i],nums[i]+f(i-1)),需要注意的是此处求到的f(i)为到0到i处的最大子序列的和,不一定是整个数组的最大子序列的和,
+因此还需要找f(i)中的最大值.
+2.使用分治+递归的方法,能够将时间复杂度减少到O(logn)
+
+时间复杂度:O(n)
+空间复杂度:O(n)
