@@ -1,0 +1,94 @@
+给你一个 m 行 n 列的矩阵 matrix ，请按照 顺时针螺旋顺序 ，返回矩阵中的所有元素
+
+解答:
+/*
+ * @lc app=leetcode.cn id=54 lang=cpp
+ *
+ * [54] 螺旋矩阵
+ */
+
+// @lc code=start
+class Solution {
+public:
+
+    int l_bound_,r_bound_,u_bound_,d_bound_;
+
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> result;
+        l_bound_ = -1;
+        r_bound_ = matrix.front().size();
+        u_bound_ = 0;
+        d_bound_ = matrix.size();
+        //0=up,1=right,2=down,3=left
+        int direction = 1;
+        int r = 0,c = 0;
+
+        result.push_back(matrix[0][0]);
+        int count = 1;
+
+        while(count < matrix.front().size()*matrix.size()){
+            result.push_back(next_cell(direction,r,c,matrix));
+            count++;
+        }
+
+        return result;
+    }
+
+    int next_cell(int& last_d,int& last_r,int& last_c,
+        const vector<vector<int>>& matrix){
+        int r = last_r,c = last_c;
+        switch (last_d)
+        {
+        case 0:
+            if(r - 1 <= u_bound_){
+                u_bound_ = r;
+                c = c + 1; 
+                last_d = 1;
+            }else{
+                r -= 1;
+            }
+            break;
+        case 1:
+            if(c + 1 >= r_bound_){
+                r_bound_ = c;
+                r = r + 1; 
+                last_d = 2;
+            }
+            else{
+                c += 1;
+            }
+            break;
+        case 2:
+            if(r + 1 >= d_bound_){
+                d_bound_ = r;
+                c = c - 1; 
+                last_d = 3;
+            }else{
+                r += 1;
+            }
+            break;
+        case 3:
+            if(c - 1 <= l_bound_){
+                l_bound_ = c;
+                r = r - 1; 
+                last_d = 0;
+            }else{
+                c -= 1;
+            }
+            break;
+        
+        default:
+            break;
+        }
+        last_r = r;
+        last_c = c;
+        return matrix[r][c];
+    }
+};
+// @lc code=end
+
+思路:
+使用基于规则的方法,代码不太美观;
+时间复杂度:O(n*m)
+空间复杂度:O(n*m)
+
