@@ -1,0 +1,89 @@
+给定一个非负整数数组 nums ，你最初位于数组的 第一个下标 。
+
+数组中的每个元素代表你在该位置可以跳跃的最大长度。
+
+判断你是否能够到达最后一个下标。
+
+题解:
+// @before-stub-for-debug-begin
+#include <vector>
+#include <string>
+#include "commoncppproblem55.h"
+
+using namespace std;
+// @before-stub-for-debug-end
+
+/*
+ * @lc app=leetcode.cn id=55 lang=cpp
+ *
+ * [55] 跳跃游戏
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int n_size_ = 0;
+    vector<int> nums_;
+    bool canJump(vector<int>& nums) {
+
+        //dp ,but time costly
+        // vector<bool> fn(nums.size(),false);
+        // fn[0] = true;
+        // for(int i = 1;i<nums.size();i++){
+        //     bool temp = false;
+        //     for(int j = 1;j <= i;j++){
+        //         temp |= fn[i-j]&(j <= nums[i-j]);
+        //     }
+        //     fn[i] = temp;
+        // }
+
+        //use depth greedy,but time costly
+        // n_size_ = nums.size();
+        // nums_ = nums;
+
+        // bool jump_success = false;
+        // sub_function(0,jump_success);
+
+        //use breadth greedy
+        int max_index = 0;
+        for(int i = 0;i < nums.size();i++){
+            if(i > max_index)
+                return false;
+            max_index = max(max_index,i + nums[i]);
+            if(max_index >= nums.size()-1){
+                return true;
+            }
+        }
+        
+
+        return false;
+    }
+
+    // void sub_function(int cur_index,bool& jump_success){
+    //     if(cur_index >= n_size_-1){
+    //         jump_success = true;
+    //         return;
+    //     }
+             
+    //     // for(int i = nums_[cur_index];i > 0;i--){
+    //     for(int i = 1;i <= nums_[cur_index];i++){
+    //         sub_function(cur_index + i,jump_success);
+    //         if(jump_success == true){
+    //             return;
+    //         }
+    //     }
+
+    //     return;
+    // }
+};
+// @lc code=end
+
+思路：
+1，使用动态规划，设f(n)为当前位置是否可达，f(n)=Σf(n-i)&[i >= nums(n-i)],不过该方法在某些case下会超时
+2，使用深度贪心算法，每次跳跃数为当前可跳跃数的最大值，然后一直往后贪心地跳，如果没有成功到达最后一点，则回溯上一次的跳跃数-1，继续跳跃，同样在某个极端case下超时了
+3，使用广度贪心算法，依次遍历每一个点的最远到达距离
+
+算法复杂度：
+思路1：O(n!),O(n)
+思路2：O(n!),O(1)
+思路3：O(n),O(1)
