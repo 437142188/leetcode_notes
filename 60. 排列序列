@@ -1,0 +1,100 @@
+给出集合 [1,2,3,...,n]，其所有元素共有 n! 种排列。
+
+按大小顺序列出所有排列情况，并一一标记，当 n = 3 时, 所有排列如下：
+
+"123"
+"132"
+"213"
+"231"
+"312"
+"321"
+给定 n 和 k，返回第 k 个排列。
+
+解答：
+/*
+ * @lc app=leetcode.cn id=60 lang=cpp
+ *
+ * [60] 排列序列
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector<int> use_flags_;
+    vector<char> array_;
+
+    string getPermutation(int n, int k) {
+        if(n == 1)
+        {
+            string result("1");
+            return result;
+        }
+
+        int start_base = 1;
+        for(int i = 2;i<n;i++)
+        {
+            start_base *= i;
+        }
+
+        int start_num = 0;
+        for(int i = 1;i <= n;i++)
+        {
+            if(k <= i * start_base)
+            {
+                start_num = i;
+                break;
+            }
+        }
+
+
+        for(int i =1;i <= n;i++)
+        {
+            if(i == start_num)
+            {
+                continue;
+            }
+            array_.push_back('0'+ i);
+            use_flags_.push_back(0);
+        }
+
+        vector<string> result;
+        string temp_str;
+        back_trace(temp_str,n-1,result);
+
+        sort(result.begin(),result.end());
+
+
+        string final_result;
+        final_result.push_back('0'+start_num);
+        return final_result + result[k-1-(start_num-1)*start_base];
+    }
+
+    void back_trace(string& temp_str,int n,
+                vector<string>& result)
+    {
+        if(temp_str.size() == n)
+        {
+            result.push_back(temp_str);
+            return;
+        }
+
+        for(int i =0;i <n;i++)
+        {
+            if(use_flags_[i] == 1)
+            {
+                continue;
+            }
+            use_flags_[i] = 1;
+            temp_str.push_back(array_[i]);
+            back_trace(temp_str,n,result);
+            temp_str.pop_back();
+            use_flags_[i] = 0;
+        }
+        
+    }
+};
+// @lc code=end
+
+思路：一开始使用暴力回溯法，不过超时了，看了官方解答，该题可以使用数学归纳法，缩小要回溯的范围，最后解答缩小了一位，就通过了哈哈。
+时间复杂度：O((n-1)!)
+空间复杂度：O(n)
