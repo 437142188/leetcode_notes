@@ -1,0 +1,104 @@
+给你一个正整数 n ，生成一个包含 1 到 n2 所有元素，且元素按顺时针顺序螺旋排列的 n x n 正方形矩阵 matrix 。
+
+代码：
+/*
+ * @lc app=leetcode.cn id=59 lang=cpp
+ *
+ * [59] 螺旋矩阵 II
+ */
+
+// @lc code=start
+class Solution {
+public:
+    enum ARROW{
+        left,
+        up,
+        right,
+        down
+    };
+
+    vector<vector<int>> generateMatrix(int n) {
+        int array[n][n];
+        ARROW arrow = right;
+        int count = 1;
+        int n_2 = n * n;
+        int cur_row = 0;
+        int cur_col = 0;
+        array[0][0] = 1;
+        int row_min=0,row_max=n,col_min=0,col_max=n;
+
+        while(count < n_2)
+        {
+            count++;
+
+            switch (arrow)
+            {
+            case left:
+                cur_col--;
+                if(cur_col < col_min )
+                {
+                    cur_col++;
+                    cur_row--;
+                    arrow = up;
+                    row_max--;
+                }
+                array[cur_row][cur_col] = count;
+                break;
+            case up:
+                cur_row--;
+                if(cur_row < row_min)
+                {
+                    cur_row++;
+                    cur_col++;
+                    arrow = right;
+                    col_min++;
+                }
+                array[cur_row][cur_col] = count;
+                break;
+            case right:
+                cur_col++;
+                if(cur_col >= col_max)
+                {
+                    cur_col--;
+                    cur_row++;
+                    arrow = down;
+                    row_min++;
+                }
+                array[cur_row][cur_col] = count;
+                break;
+            case down:
+                cur_row++;
+                if(cur_row >= row_max )
+                {
+                    cur_row--;
+                    cur_col--;
+                    arrow = left;
+                    col_max--;
+                }
+                array[cur_row][cur_col] = count;
+                break;
+            
+            default:
+                break;
+            }
+        }
+
+        vector<vector<int>> result;
+        for(int i = 0; i < n;i++)
+        {
+            vector<int> temp;
+            for(int j = 0;j < n;j++)
+            {
+                temp.push_back(array[i][j]);
+            }
+            result.push_back(temp);
+        }
+
+        return result;
+    }
+};
+// @lc code=end
+
+思路：使用规则方法，对上下左右方向的数据刷新进行分别编写，同时动态调整边界条件
+
+时间复杂度：O(n^2)
