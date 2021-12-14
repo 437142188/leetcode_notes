@@ -1,0 +1,33 @@
+一个机器人位于一个 m x n 网格的左上角 （起始点在下图中标记为 “Start” ）。
+
+机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为 “Finish” ）。
+
+问总共有多少条不同的路径？
+
+/*
+ * @lc app=leetcode.cn id=62 lang=cpp
+ *
+ * [62] 不同路径
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        //use combination theory
+
+        
+        long int result = 1;
+        for(int i = 1,j = n;i < m;i++,j++)
+        {
+            result = result * j / i;
+        }
+
+        return result;
+    }
+};
+// @lc code=end
+
+思路:使用排列组合思想直接求取闭式解,相当于从(m+n-2)个位置中选择(m-1)个位置,用来向下走,剩下的位置向右走.需要注意的是如果直接使用组合公式计算,有些case会越界,需要做一下化简.
+时间复杂度:O(n)
+空间复杂度:O(1)
