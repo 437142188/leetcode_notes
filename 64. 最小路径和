@@ -1,0 +1,55 @@
+给定一个包含非负整数的 m x n 网格 grid ，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
+
+说明：每次只能向下或者向右移动一步。
+
+/*
+ * @lc app=leetcode.cn id=64 lang=cpp
+ *
+ * [64] 最小路径和
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int minPathSum(vector<vector<int>>& grid) {
+        int row = grid.size();
+        int col = grid.front().size();
+
+        if(row == 1 && col == 1)
+        {
+            return grid[0][0];
+        }
+
+        int dp[col];
+        memset(dp,0,col);
+        int result = grid[0][0];
+
+        for(int i = 0; i < row;i++)
+        {
+            for(int j = 0;j < col;j++)
+            {
+                if(i == 0 && j == 0)
+                {
+                    dp[0] = result;
+                }
+                else
+                {
+                    int a = i == 0 ? 0:dp[j];
+                    int b = j == 0 ? 0:result;
+                    int c = i == 0? 
+                            b: j == 0 ?
+                             a :min(a,b);
+                    dp[j] = c + grid[i][j];
+                    result = dp[j];
+                }
+                
+            }
+        }
+        return result;
+    }
+};
+// @lc code=end
+
+思路:使用动态规划,同时使用滚动更新来减小空间复杂度,令f(i,j)为到该点的最小代价,递推公式为f(i,j) =min(f(i-1,j),f(i,j-1))+grid[i][j] 
+时间复杂度:O(n*m)
+空间复杂度:O(m)
