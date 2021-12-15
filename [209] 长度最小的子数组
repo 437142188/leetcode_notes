@@ -1,0 +1,47 @@
+给定一个含有 n 个正整数的数组和一个正整数 target 。
+
+找出该数组中满足其和 ≥ target 的长度最小的 连续子数组 [numsl, numsl+1, ..., numsr-1, numsr] ，并返回其长度。如果不存在符合条件的子数组，返回 0 。
+
+/*
+ * @lc app=leetcode.cn id=209 lang=cpp
+ *
+ * [209] 长度最小的子数组
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {
+        int l_index = 0;
+        int r_index = 0;
+
+        int sum = nums.front();
+        int min_count = nums.size();
+        bool find_target = false;
+        while(l_index<= r_index)
+        {
+            if(sum >= target)
+            {
+                min_count = min(min_count,r_index - l_index + 1);
+                sum -= nums[l_index];
+                l_index++;
+                find_target = true;
+            }
+            else 
+            {
+                r_index++;
+                if(r_index == nums.size())
+                    break;
+                sum += nums[r_index];
+            }
+
+        }
+
+        return find_target == true ? min_count : 0;
+    }
+};
+// @lc code=end
+
+思路:使用双指针滑动窗口法,如果和大于目标值则左下标加1,否则右下标加1
+时间复杂度:O(n)
+空间复杂度:O(1)
