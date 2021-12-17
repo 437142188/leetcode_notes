@@ -1,0 +1,76 @@
+给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。
+
+/*
+ * @lc app=leetcode.cn id=206 lang=cpp
+ *
+ * [206] 反转链表
+ */
+
+// @lc code=start
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+
+        if(head == nullptr)
+            return head;
+
+        // stack<ListNode*> use_stack;
+        // ListNode* temp = head;
+        // while(temp != nullptr)
+        // {
+        //     use_stack.push(temp);
+        //     temp = temp->next;
+        // }
+        
+        // temp = use_stack.top();
+        // use_stack.pop();
+        // ListNode* result = temp;
+
+        // while(use_stack.size() != 0)
+        // {
+        //     temp->next = use_stack.top();
+        //     use_stack.pop();
+        //     temp = temp->next;
+        // }
+        // temp->next = nullptr;
+
+        //use recursion
+        ListNode* result;
+        recursion(nullptr,head,result);
+        
+        return result;
+    }
+
+    void recursion(ListNode* last_node,ListNode* cur_node,ListNode*& result)
+    {
+        if(cur_node->next == nullptr)
+        {
+            result = cur_node;
+            cur_node->next = last_node;
+            return;
+        }
+
+        recursion(cur_node,cur_node->next,result);
+        cur_node->next = last_node;
+        return;
+    }
+};
+// @lc code=end
+
+思路:1,借用栈,存储你链表的每一个地址,然后反向赋值.
+    2,使用递归,依次反向赋值.
+    
+时间复杂度:1,O(n)
+          2,O(n)
+空间复杂度:1,O(n)
+          2,O(n)
