@@ -1,0 +1,52 @@
+给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+
+如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+
+不允许修改 链表。
+
+/*
+ * @lc app=leetcode.cn id=142 lang=cpp
+ *
+ * [142] 环形链表 II
+ */
+
+// @lc code=start
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        unordered_map<ListNode*,int> map;
+        ListNode* dummy_node = new ListNode();
+        dummy_node->next = head;
+        ListNode* temp = dummy_node;
+        while(temp->next != nullptr)
+        {
+            unordered_map<ListNode*,int>::iterator iter;
+            iter = map.find(temp->next);
+            if(iter == map.end())
+            {
+                pair<ListNode*,int> element(temp->next,1);
+                map.insert(element);
+                temp = temp->next;
+            }
+            else
+            {
+                return temp->next;
+            }
+        }
+
+        return nullptr;
+    }
+};
+// @lc code=end
+
+思路:使用无序图来存储链表的地址,遍历整个链表,将其地址存入图中,如果某一次的存储发现图中已经存在,则返回当前指针
+时间复杂度:O(n)
+空间复杂度:O(n)
