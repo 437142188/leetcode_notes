@@ -1,0 +1,66 @@
+给你一个字符串 s ，逐个翻转字符串中的所有 单词 。
+
+单词 是由非空格字符组成的字符串。s 中使用至少一个空格将字符串中的 单词 分隔开。
+
+请你返回一个翻转 s 中单词顺序并用单个空格相连的字符串。
+
+说明：
+
+输入字符串 s 可以在前面、后面或者单词间包含多余的空格。
+翻转后单词间应当仅用一个空格分隔。
+翻转后的字符串中不应包含额外的空格。
+
+/*
+ * @lc app=leetcode.cn id=151 lang=cpp
+ *
+ * [151] 翻转字符串里的单词
+ */
+
+// @lc code=start
+class Solution {
+public:
+    string reverseWords(string s) {
+        stack<string> save_stack;
+        int start=0,end=0;
+        while(start < s.size())
+        {
+            while(start < s.size() && s[start] == ' ')
+            {
+                start++;
+            }
+
+            if(start == s.size())
+                break;
+
+            end = start;
+            while(end < s.size() && s[end] !=' ')
+            {
+                end++;
+            }
+
+            string temp(s.begin()+start,
+                s.begin()+end);
+            save_stack.push(temp);
+            start = end+1;
+        }
+
+        string result;
+        while(save_stack.size() > 0)
+        {
+            result =result + save_stack.top() + ' ';
+            save_stack.pop();
+        }
+
+        result.erase(result.size()-1,1);
+        return result;
+    }
+};
+// @lc code=end
+
+思路:1,使用额外空间栈,存储分离出来的单词,然后再出栈.
+    2,不使用额外空间,先对整个字符串进行翻转,再对单个的翻转后的单词进行翻转
+    
+时间复杂度:1,O(n)
+          2,O(n)
+空间复杂度:1,O(n)
+          2,O(1)
