@@ -1,0 +1,56 @@
+给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。
+
+注意：若 s 和 t 中每个字符出现的次数都相同，则称 s 和 t 互为字母异位词。
+
+/*
+ * @lc app=leetcode.cn id=242 lang=cpp
+ *
+ * [242] 有效的字母异位词
+ */
+
+// @lc code=start
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+
+        if(s.size() != t.size())
+            return false;
+
+        unordered_map<char,int> map_s,map_t;
+        for(int i =0;i < s.size();i++)
+        {
+            if(map_s.find(s[i]) == map_s.end())
+            {
+                pair<char,int> temp(s[i],1);
+                map_s.insert(temp);
+            }
+            else
+            {
+                map_s[s[i]]++;
+            }
+            
+            if(map_t.find(t[i]) == map_t.end())
+            {
+                pair<char,int> temp(t[i],1);
+                map_t.insert(temp);
+            }
+            else
+            {
+                map_t[t[i]]++;
+            }
+        }
+
+        for(auto iter = map_s.begin();iter !=map_s.end();iter++)
+        {
+            if(iter->second != map_t[iter->first])
+                return false;
+        }
+
+        return true;
+    }
+};
+// @lc code=end
+
+思路:使用无序哈希表实现,分别用两个哈希表存储两个字符串中字符的个数,然后再比较两个哈希表是否值相等.
+时间复杂度:O(n)
+空间复杂度:O(n)
