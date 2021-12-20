@@ -1,0 +1,41 @@
+给定两个数组，编写一个函数来计算它们的交集。
+
+/*
+ * @lc app=leetcode.cn id=349 lang=cpp
+ *
+ * [349] 两个数组的交集
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        unordered_set<int> set_a,set_b;
+        for(int i = 0;i < nums1.size();i++)
+        {
+            set_a.insert(nums1[i]);
+        }
+
+        for(int i = 0;i < nums2.size();i++)
+        {
+            set_b.insert(nums2[i]);
+        }
+
+        vector<int> result;
+        for(auto iter = set_a.begin();
+            iter != set_a.end();iter++)
+        {
+            if(set_b.find(*iter) != set_b.end())
+            {
+                result.push_back(move(*iter));
+            }
+        }
+
+        return result;
+    }
+};
+// @lc code=end
+
+思路:使用两个set存储输入的数组,然后再随便比较一个set中的数据是否在另一个set中出现
+时间复杂度:O(n)
+空间复杂度:O(n)
