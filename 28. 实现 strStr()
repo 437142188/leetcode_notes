@@ -39,3 +39,70 @@ public:
 
 改进：使用kmp算法，先构建一个状态机，根据当前状态以及下一个匹配的字符来进行状态切换，该算法的复杂点在于如何构建这个有限状态机
 算法复杂度：时间复杂度O(n)，空间复杂度O（m）。
+
+
+kmp算法:
+/*
+ * @lc app=leetcode.cn id=28 lang=cpp
+ *
+ * [28] 实现 strStr()
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+
+        if(needle.size() == 0)
+            return 0;
+
+        vector<int> next_array = getNextArray(needle);
+
+        int j = -1;
+        for(int i = 0;i < haystack.size();i++)
+        {
+            while(j >=0 && needle[j+1] != haystack[i])
+            {
+                j = next_array[j];
+            }
+
+            if(needle[j+1] == haystack[i])
+            {
+                j++;
+            }
+
+            if(j == needle.size()-1)
+            {
+                return i - needle.size()+1;
+            }
+        }
+
+        return -1;
+    }
+
+    vector<int> getNextArray(string needle)
+    {
+        vector<int> next(needle.size(),0);
+
+        int j = -1;
+        next[0] = j;
+
+
+        for(int i = 1;i < needle.size();i++)
+        {
+            while(j >= 0 && needle[i] != needle[j+1])
+            {
+                j = next[j];
+            }
+            if(needle[j+1] == needle[i])
+                j++;
+            
+            next[i] = j;
+        }
+
+        return next;
+    }
+};
+// @lc code=end
+
+思路:kmp算法需要先构造next数组,构造方法相当于自己对自己进行strStr(),要充分利用之前的next数组
