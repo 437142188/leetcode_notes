@@ -1,0 +1,62 @@
+/*
+ * @lc app=leetcode.cn id=225 lang=cpp
+ *
+ * [225] 用队列实现栈
+ */
+
+// @lc code=start
+class MyStack {
+public:
+    MyStack() {
+
+    }
+    
+    void push(int x) {
+        while(!queue_1_.empty())
+        {
+            queue_2_.push(queue_1_.front());
+            queue_1_.pop();
+        }
+
+        queue_1_.push(x);
+
+        while(!queue_2_.empty())
+        {
+            queue_1_.push(queue_2_.front());
+            queue_2_.pop();
+        }
+    }
+    
+    int pop() {
+        int result = queue_1_.front();
+        queue_1_.pop();
+        return result;
+    }
+    
+    int top() {
+        return queue_1_.front();
+    }
+    
+    bool empty() {
+        return queue_1_.empty();
+    }
+
+private:
+    queue<int> queue_1_;
+    queue<int> queue_2_;
+};
+
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * MyStack* obj = new MyStack();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->top();
+ * bool param_4 = obj->empty();
+ */
+// @lc code=end
+
+思路:使用双队列,第一个队列用于模拟栈的数据顺序,第二个队列用于缓存,生成栈的顺序.实际上可以使用一个队列实现相应功能,每次新的push时候,将原来的队列中的数据依次pop出来重新插入到当前队列中,就
+完成了栈数据的模拟.
+时间复杂度:O(n)
+空间复杂度:O(n)
