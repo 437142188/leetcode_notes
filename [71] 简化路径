@@ -1,0 +1,68 @@
+/*
+ * @lc app=leetcode.cn id=71 lang=cpp
+ *
+ * [71] 简化路径
+ */
+
+// @lc code=start
+class Solution {
+public:
+    string simplifyPath(string path) {
+        if(path.size() == 1)
+            return path;
+
+        int f_index = 0;
+        int s_index = 1;
+        stack<string> stack_temp;
+        while(s_index < path.size())
+        {
+            if(path[s_index] == '/')
+            {
+                string temp = path.substr(f_index+1,s_index-f_index-1);
+                if(temp == "..")
+                {
+                    if(!stack_temp.empty())
+                    {
+                        stack_temp.pop();
+                    }
+                }
+                else if(temp != "." && temp != "")
+                    stack_temp.push(temp);
+                
+                f_index = s_index;
+            }
+            else if(s_index == path.size()-1)
+            {
+                string temp = path.substr(f_index+1,s_index-f_index);
+                if(temp == "..")
+                {
+                    if(!stack_temp.empty())
+                    {
+                        stack_temp.pop();
+                    }
+                }
+                else if(temp != "." && temp != "")
+                    stack_temp.push(temp);
+            }
+            s_index++;
+        }
+
+        string result;
+        while(!stack_temp.empty())
+        {
+            result = stack_temp.top() + '/' + result;
+            stack_temp.pop();
+        }
+
+        result = '/' + result;
+        if(result.size() > 1)
+            result.erase(result.size()-1,1);
+
+        return result;
+    }
+};
+// @lc code=end
+
+思路:先将输入的字符串进行处理,找出有效信息,存入栈中,再逐个出栈,组成输出地址
+时间复杂度:O(n)
+空间复杂度:O(n)
