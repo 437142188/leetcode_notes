@@ -1,0 +1,38 @@
+给出由小写字母组成的字符串 S，重复项删除操作会选择两个相邻且相同的字母，并删除它们。
+
+在 S 上反复执行重复项删除操作，直到无法继续删除。
+
+在完成所有重复项删除操作后返回最终的字符串。答案保证唯一。
+
+/*
+ * @lc app=leetcode.cn id=1047 lang=cpp
+ *
+ * [1047] 删除字符串中的所有相邻重复项
+ */
+
+// @lc code=start
+class Solution {
+public:
+    string removeDuplicates(string s) {
+        string result;
+
+        for(int i = 0; i < s.size(); i++)
+        {
+            if(result.empty() || result.back() != s[i])
+            {
+                result.push_back(s[i]);
+            }
+            else
+            {
+                result.pop_back();
+            }
+        }
+
+        return result;
+    }
+};
+// @lc code=end
+
+思路:使用栈,如果当前的字符与栈顶相同,则pop,否则push.实际测试中发现如果使用stack数据,最后还需要转换为string,某一个测试用例会超时,改为使用string直接操作,减少了转换的时间.
+时间复杂度:O(n)
+空间复杂度:O(n)
