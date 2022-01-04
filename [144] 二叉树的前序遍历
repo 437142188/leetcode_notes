@@ -1,0 +1,69 @@
+给你二叉树的根节点 root ，返回它节点值的 前序 遍历。
+
+/*
+ * @lc app=leetcode.cn id=144 lang=cpp
+ *
+ * [144] 二叉树的前序遍历
+ */
+
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+
+        vector<int> result;
+        //use recursive
+        // recursive(root,result);
+
+        //use iteration
+        stack<TreeNode*> stack_temp;
+
+        if(root == nullptr)
+            return result;
+        
+        stack_temp.push(root);
+
+        while(!stack_temp.empty())
+        {
+            TreeNode* node = stack_temp.top();
+            result.push_back(node->val);
+            stack_temp.pop();
+
+            if(node->right != nullptr)
+                stack_temp.push(node->right);
+            if(node->left != nullptr)
+                stack_temp.push(node->left);
+        }
+
+        return result;
+    }
+    
+    void recursive(TreeNode* cur,vector<int>& result)
+    {
+        if(cur == nullptr)
+        {
+            return;
+        }
+
+        result.push_back(cur->val);
+        recursive(cur->left,result);
+        recursive(cur->right,result);
+    }
+};
+// @lc code=end
+
+思路:1,使用递归法
+    2,使用迭代法,借助栈模拟递归中的压栈操作
+时间复杂度:O(n)
+空间复杂度:O(n)
