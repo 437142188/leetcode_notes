@@ -1,0 +1,66 @@
+给你一个整数数组 nums，有一个大小为 k 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 k 个数字。滑动窗口每次只向右移动一位。
+
+返回滑动窗口中的最大值。
+
+/*
+ * @lc app=leetcode.cn id=239 lang=cpp
+ *
+ * [239] 滑动窗口最大值
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        deque<int> deque_temp;
+        vector<int> result;
+
+        //init slide window
+        for(int i = 0; i < k; i++)
+        {
+            push(deque_temp,nums[i]);
+        }
+        result.push_back(deque_temp.front());
+
+        for(int i = k;i < nums.size();i++)
+        {
+            pop(deque_temp,nums[i-k]);
+            push(deque_temp,nums[i]);
+            result.push_back(deque_temp.front());
+        }
+
+        return result;
+    }
+
+    void push(deque<int>& deque_temp,int k)
+    {
+        while(deque_temp.size() != 0)
+        {
+            if(deque_temp.back() < k)
+            {
+                deque_temp.pop_back();
+            }
+            else
+            {
+                break;
+            }
+            
+        }
+        deque_temp.push_back(k);
+    }
+
+    void pop(deque<int>& deque_temp,int k)
+    {
+        if(deque_temp.front() == k)
+        {
+            deque_temp.pop_front();
+        }
+            
+    }
+};
+// @lc code=end
+
+思路:使用deque来维护最大值队列,其中的pop操作只需要关注滑动出的数据是否是最大值,如果不是最大值则忽略,否则将其出队;push操作则将滑入的数值插入队列里的相应位置,使得队列成一个降序队列,并且由于
+滑入数值之后的数据不可能再成为最大值,因此直接pop掉.每次都读取队列的头号元素,即为每次滑动窗口的最大值.
+时间复杂度:O(n)
+空间复杂度:O(n)
