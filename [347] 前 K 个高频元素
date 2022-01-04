@@ -1,0 +1,50 @@
+给你一个整数数组 nums 和一个整数 k ，请你返回其中出现频率前 k 高的元素。你可以按 任意顺序 返回答案。
+
+/*
+ * @lc app=leetcode.cn id=347 lang=cpp
+ *
+ * [347] 前 K 个高频元素
+ */
+
+// @lc code=start
+class Solution {
+public:
+
+    struct cmp
+    {
+        bool operator()(const pair<int,int>& left,
+            const pair<int,int>& right) const
+        {
+            return left.second < right.second;
+        }
+    };
+
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        priority_queue<pair<int,int>,vector<pair<int,int>>,cmp> pq;
+        unordered_map<int,int> map;
+
+        for(const auto&p:nums)
+        {
+            map[p]++;
+        }
+
+        for(const auto&p:map)
+        {
+            pq.push(p);
+        }
+
+        vector<int> result;
+        for(int i = 0; i < k; i++)
+        {
+            result.push_back(pq.top().first);
+            pq.pop();
+        }
+
+        return result;
+    }
+};
+// @lc code=end
+
+思路:先使用无序map来统计每个数字出现的次数,然后将其放入大顶堆中,最后得到的前k个数据输出
+时间复杂度:O(nlogn)
+空间复杂度:O(n)
