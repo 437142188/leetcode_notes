@@ -1,0 +1,102 @@
+/*
+ * @lc app=leetcode.cn id=101 lang=cpp
+ *
+ * [101] 对称二叉树
+ */
+
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    // bool isSymmetric(TreeNode* root) {
+    //     if(root == nullptr)
+    //         return false;
+
+    //     queue<TreeNode*> queue;
+    //     queue.push(root);
+
+    //     int count = 0;
+    //     while(!queue.empty())
+    //     {
+    //         int size = queue.size();
+
+    //         if(size % 2 == 1)
+    //         {
+    //             if(count != 0)
+    //                 return false;
+    //         }
+
+    //         vector<pair<int,bool>> pair_temp;
+
+    //         for(int i = 0; i < size; i++)
+    //         {
+    //             auto node = queue.front();
+    //             queue.pop();
+    //             if(node == nullptr)
+    //                 pair_temp.push_back(make_pair(-1,false));
+    //             else
+    //             {
+    //                 pair_temp.push_back(make_pair(node->val,true));
+    //                 queue.push(node->left);
+    //                 queue.push(node->right);
+    //             }
+    //         }
+
+    //         //judge symmetry
+    //         for(int i = 0,j= size-1; i < j; i++,j--)
+    //         {
+    //             if(pair_temp[i].first != pair_temp[j].first 
+    //                 || pair_temp[i].second != pair_temp[j].second)
+    //                 return false;
+    //         }
+    //         count++;
+    //     }
+
+    //     return true;
+
+    // }
+
+    //use recursion
+    bool isSymmetric(TreeNode* root)
+    {
+        if(root == nullptr)
+            return false;
+
+        return recursion(root->left,root->right);
+    }
+
+    bool recursion(TreeNode* left,TreeNode* right)
+    {
+        if(left == nullptr && right == nullptr)
+            return true;
+        if(left == nullptr || right == nullptr)
+            return false;
+        if(left->val != right->val)
+            return false;
+        
+        if(!recursion(left->left,right->right))
+            return false;
+        if(!recursion(left->right,right->left))
+            return false;
+
+        return true;
+    }
+};
+// @lc code=end
+
+思路:1,使用迭代法,把每一层的数据整理出来,然后分别判断该层诗句是否对称.
+    2,使用递归法,递归函数判断该层左右是否相等,以及该层下面的左右和右左是否相等.
+时间复杂度:1,O(n^2)
+         2,O(n)
+空间复杂度:1,O(n)
+          2,O(n)
