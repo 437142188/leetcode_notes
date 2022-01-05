@@ -1,0 +1,59 @@
+给你一个二叉树，请你返回其按 层序遍历 得到的节点值。 （即逐层地，从左到右访问所有节点）。
+
+/*
+ * @lc app=leetcode.cn id=102 lang=cpp
+ *
+ * [102] 二叉树的层序遍历
+ */
+
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+
+        vector<vector<int>> result;
+        if(root == nullptr)
+            return result;
+        queue<pair<TreeNode*,int>> queue;
+        
+
+        queue.push(make_pair(root,1));
+        while(!queue.empty())
+        {
+            auto node = queue.front();
+            queue.pop();
+            if(result.size() < node.second)
+            {
+                vector<int> temp(1,node.first->val);
+                result.push_back(temp);
+            }
+            else
+            {
+                result[node.second-1].push_back(node.first->val);
+            }
+
+            if(node.first->left != nullptr)
+                queue.push(make_pair(node.first->left,node.second+1));
+            if(node.first->right != nullptr)
+                queue.push(make_pair(node.first->right,node.second+1)); 
+        }
+
+        return result;
+    }
+};
+// @lc code=end
+
+思路:使用队列实现广度遍历,对于层数则使用pair数据绑定.也可以先统计该层有效节点的大小,再一次性装入result中
+时间复杂度:O(n)
+空间复杂度:O(n)
