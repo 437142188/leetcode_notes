@@ -1,0 +1,61 @@
+给定一个二叉树，判断它是否是高度平衡的二叉树。
+
+本题中，一棵高度平衡二叉树定义为：
+
+一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1 。
+
+/*
+ * @lc app=leetcode.cn id=110 lang=cpp
+ *
+ * [110] 平衡二叉树
+ */
+
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool isBalanced(TreeNode* root) {
+        if(root == nullptr)
+            return true;
+
+        int max_h = 0;
+        return recursion(root,max_h);
+        
+    }
+
+    bool recursion(TreeNode* node,int& max_h)
+    {
+        if(node == nullptr)
+            return true;
+            
+        max_h++;
+
+        int left_h = max_h,right_h = max_h;
+        
+        if(!recursion(node->left,left_h))
+            return false;
+        if(!recursion(node->right,right_h))
+            return false;
+
+        max_h = max(left_h,right_h);
+
+        if(abs(left_h - right_h) > 1)
+            return false;
+        return true;
+    }
+};
+// @lc code=end
+
+思路:使用前序遍历,递归函数的参数是当前的节点和深度,返回值该二叉树是否是平衡二叉树,单层逻辑为左右子节点的高度差是否大于1
+时间复杂度:O(n)
+空间复杂度:O(n)
