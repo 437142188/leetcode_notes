@@ -1,0 +1,84 @@
+根据一棵树的中序遍历与后序遍历构造二叉树。
+
+注意:
+你可以假设树中没有重复的元素。
+
+/*
+ * @lc app=leetcode.cn id=106 lang=cpp
+ *
+ * [106] 从中序与后序遍历序列构造二叉树
+ */
+
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+
+        return recursion(inorder,0,inorder.size(),
+            postorder,0,postorder.size());
+    }
+
+    TreeNode* recursion(vector<int>& inorder,int in_start,int in_end,
+         vector<int>& postorder,int po_start,int po_end)
+    {
+        if(po_start >= po_end)
+            return nullptr;
+
+        int post_num = postorder[po_end-1];
+        auto node = new TreeNode(post_num);
+
+        int in_index = 0;
+        for(int i = in_start;i < in_end;i++)
+        {
+            if(inorder[i] == post_num)
+                in_index = i;
+        }
+
+        //deal inorder_index
+        int in_start_left = in_start;
+        int in_end_left = in_index;
+        int in_start_right = in_index + 1;
+        int in_end_right = in_end; 
+
+        // cout<<"in:"<<in_start_left<<","
+        //     <<in_end_left<<","
+        //     <<in_start_right<<","
+        //     <<in_end_right<<endl;
+
+        //deal postorder_index
+        int po_start_left = po_start;
+        int po_end_left = po_start + in_end_left - in_start_left;
+        int po_start_right = po_end_left;
+        int po_end_right = po_end - 1;
+
+        // cout<<"po:"<<po_start_left<<","
+        // <<po_end_left<<","
+        // <<po_start_right<<","
+        // <<po_end_right<<endl;
+
+        node->left = recursion(inorder,in_start_left,in_end_left,
+            postorder,po_start_left,po_end_left);
+        node->right = recursion(inorder,in_start_right,in_end_right,
+            postorder,po_start_right,po_end_right);
+
+        return node;
+    }
+};
+// @lc code=end
+
+思路：给定中序和后序的数组。还原二叉树的方法为：根据后序的最后一个数据，在中序中寻找值相等的位置，然后以该位置为分割点，再根据中序的前子数组和后子数组的大小去分割除去最后一个元素
+的后序数组，然后依次迭代，生成子树。
+扩展：如果是给定前序和中序，则只要把之前后序的最后一个元素换成前序的第一个元素，其他一模一样。
+时间复杂度：O(n)
+空间复杂度：O(n)
