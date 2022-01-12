@@ -1,0 +1,60 @@
+给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。
+
+百度百科中最近公共祖先的定义为：“对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
+
+/*
+ * @lc app=leetcode.cn id=235 lang=cpp
+ *
+ * [235] 二叉搜索树的最近公共祖先
+ */
+
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        return recursion(root,p,q);
+    }
+
+    TreeNode* recursion(TreeNode* root, TreeNode* p, TreeNode* q)
+    {
+        if(root == nullptr || root == p || root == q)
+            return root;
+
+        TreeNode* p_node,*q_node;
+        if(root->val > p->val)
+        {
+            p_node = recursion(root->left,p,q);
+            q_node = recursion(root->right,p,q);
+        }
+        else
+        {
+            q_node = recursion(root->left,p,q);
+            p_node = recursion(root->right,p,q);
+        }
+
+        if(p_node != nullptr && q_node != nullptr)
+            return root;
+        if(p_node != nullptr && q_node == nullptr)
+            return p_node;
+        else if(p_node == nullptr && q_node != nullptr)
+            return q_node;
+        else 
+            return nullptr;
+    }
+};
+// @lc code=end
+
+思路：使用自上而下，根据p，q的值去寻找应该是左寻找还是右寻找，如果同时找到了，就返回当前节点，否则返回其有效节点。其实对于二叉搜索树，最近父节点的特征是恰好位于[p,q]之间，根据这个
+特征就可以依次遍历寻找最近父节点。
+时间复杂度：O(n)
+空间复杂度：O(n)
