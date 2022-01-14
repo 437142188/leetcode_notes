@@ -1,0 +1,49 @@
+给定两个整数 n 和 k，返回范围 [1, n] 中所有可能的 k 个数的组合。
+
+你可以按 任何顺序 返回答案。
+
+/*
+ * @lc app=leetcode.cn id=77 lang=cpp
+ *
+ * [77] 组合
+ */
+
+// @lc code=start
+class Solution {
+public:
+    
+public:
+    vector<vector<int>> combine(int n, int k) {
+        int start_index = 1;
+        vector<vector<int>> result;
+        vector<int> temp;
+
+        backtrack(n,k,temp,start_index,result);
+
+        return result;
+    }   
+
+    void backtrack(int n,int k,vector<int>& temp,
+        int start_index,vector<vector<int>>& result)
+    {
+        if(temp.size() == k)
+        {
+            result.push_back(temp);
+            return;
+        }
+
+        for(int i = start_index; i <= n; i++)
+        {
+            temp.push_back(i);
+            backtrack(n,k,temp,i+1,result);
+            temp.pop_back();
+
+        }
+    }
+
+};
+// @lc code=end
+
+思路：使用回溯，需要注意的是如果是排列问题，那么for循环的初始值为1。如果是组合问题，初始值为递增的。
+时间复杂度：O(n!)
+空间复杂度：O(n)
