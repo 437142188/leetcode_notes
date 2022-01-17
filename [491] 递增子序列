@@ -1,0 +1,56 @@
+给你一个整数数组 nums ，找出并返回所有该数组中不同的递增子序列，递增子序列中 至少有两个元素 。你可以按 任意顺序 返回答案。
+
+数组中可能含有重复元素，如出现两个整数相等，也可以视作递增序列的一种特殊情况。
+
+/*
+ * @lc app=leetcode.cn id=491 lang=cpp
+ *
+ * [491] 递增子序列
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector<vector<int>> result;
+    vector<int> temp;
+public:
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+
+        backtrack(nums,0);
+        return result;
+    }
+
+    void backtrack(vector<int>& nums,int start_index)
+    {
+        if(temp.size() > 1)
+            result.push_back(temp);
+        if(start_index >= nums.size())
+            return;
+
+        unordered_map<int,bool> used_map;
+
+        for(int i = start_index; i < nums.size(); i++)
+        {
+            if(temp.size() > 0)
+            {
+                if(temp.back() > nums[i])
+                    continue;
+            }
+
+            if(used_map.find(nums[i]) == used_map.end())
+                used_map[nums[i]] = true;
+            else if(used_map[nums[i]] == true)
+                continue;
+
+            temp.push_back(nums[i]);
+            backtrack(nums,i+1);
+            temp.pop_back();
+        }
+
+    }
+};
+// @lc code=end
+
+思路：使用回溯，与求子集类似，需要注意的是剪枝操作，同一层相同的元素只取一个。
+时间复杂度：O(n!)
+空间复杂度：O(n)
