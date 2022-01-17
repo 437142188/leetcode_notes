@@ -1,0 +1,49 @@
+给你一个整数数组 nums ，数组中的元素 互不相同 。返回该数组所有可能的子集（幂集）。
+
+解集 不能 包含重复的子集。你可以按 任意顺序 返回解集。
+
+/*
+ * @lc app=leetcode.cn id=78 lang=cpp
+ *
+ * [78] 子集
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector<vector<int>> result;
+    vector<int> temp;
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        
+        for(int i = 0; i <= nums.size(); i++)
+            backtrack(nums,i,0);
+
+        return result;
+    }
+
+    void backtrack(vector<int>& nums,const int& k,
+        const int& start_index)
+    {
+        if(temp.size() == k)
+        {
+            result.push_back(temp);
+            return;
+        }
+
+        for(int i = start_index; i <= nums.size() - (k - temp.size()); i++)
+        {
+            temp.push_back(nums[i]);
+            backtrack(nums,k,i+1);
+            temp.pop_back();
+        }
+    }
+};
+// @lc code=end
+
+思路：1，使用求组合的方法，外面再用一个for循环遍历不同组合数量。
+      2，求子集的问题其实就是求组合树中所有的节点，把他们全部存起来就是结果
+时间复杂度：1,O(2n!)
+            2,O(n!)
+空间复杂度：1,O(n)
+            2,O(n)
