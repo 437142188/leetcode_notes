@@ -1,0 +1,51 @@
+给你一个字符串 s，请你将 s 分割成一些子串，使每个子串都是 回文串 。返回 s 所有可能的分割方案。
+
+回文串 是正着读和反着读都一样的字符串。
+
+/*
+ * @lc app=leetcode.cn id=131 lang=cpp
+ *
+ * [131] 分割回文串
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector<vector<string>> result;
+    vector<string> temp;
+public:
+    vector<vector<string>> partition(string s) {
+        backtrack(s,0);
+
+        return result;
+    }
+
+    void backtrack(const string& s,int start_index)
+    {
+        if(start_index >= s.size())
+        {
+            result.push_back(temp);
+            return;
+        }
+
+        for(int i = start_index; i < s.size(); i++)
+        {
+            string str = s.substr(start_index,i-start_index+1);
+            string str_re = str;
+            reverse(str_re.begin(),str_re.end());
+            if(str != str_re)
+                continue;
+
+            temp.push_back(str);
+            backtrack(s,i+1);
+            temp.pop_back();
+
+        }
+
+    }
+};
+// @lc code=end
+
+思路：使用回溯，关键是把切割问题抽象为组合问题，模拟出树形结构，就可以写出回溯法的for循环了
+时间复杂度：O(n!)
+空间复杂度：O(n)
