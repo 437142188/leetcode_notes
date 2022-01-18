@@ -1,0 +1,58 @@
+给你一份航线列表 tickets ，其中 tickets[i] = [fromi, toi] 表示飞机出发和降落的机场地点。请你对该行程进行重新规划排序。
+
+所有这些机票都属于一个从 JFK（肯尼迪国际机场）出发的先生，所以该行程必须从 JFK 开始。如果存在多种有效的行程，请你按字典排序返回最小的行程组合。
+
+例如，行程 ["JFK", "LGA"] 与 ["JFK", "LGB"] 相比就更小，排序更靠前。
+假定所有机票至少存在一种合理的行程。且所有的机票 必须都用一次 且 只能用一次。
+
+/*
+ * @lc app=leetcode.cn id=332 lang=cpp
+ *
+ * [332] 重新安排行程
+ */
+
+// @lc code=start
+class Solution {
+public:
+    vector<string> result;
+    unordered_map<string,map<string,int>> targets;
+public:
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        for(const auto& ticket:tickets)
+        {
+            targets[ticket[0]][ticket[1]]++;
+        }
+
+        result.push_back("JFK");
+        backtrack(tickets.size());
+
+        return result;
+    }
+
+    bool backtrack(int station_num)
+    {
+        if(result.size() == station_num + 1)
+            return true;
+
+        for(auto&target:targets[result.back()])
+        {
+            if(target.second > 0)
+            {
+                result.push_back(target.first);
+                target.second--;
+                if(backtrack(station_num))
+                    return true;
+                target.second++;
+                result.pop_back();
+            }
+        }
+
+        return false;
+    }
+};
+// @lc code=end
+
+思路：使用回溯法，关键是选择什么容器由于始发站到目的地是一对多，因此使用unordered_map存储，而unordered_map的第二个元素选择map是应为题目要求输出要字典排序，map刚好是有序的。最后map的第
+二个元素用来存储当前始发站到目的地是否已经用过一次了，防止在递归的时候重复使用。最后递归搜索的时候只找出第一条符合要求的，就是题目要的结果，所以递归函数用bool返回
+时间复杂度：O(n!)
+空间复杂度：O(n)
