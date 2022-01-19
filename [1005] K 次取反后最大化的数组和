@@ -1,0 +1,59 @@
+给你一个整数数组 nums 和一个整数 k ，按以下方法修改该数组：
+
+选择某个下标 i 并将 nums[i] 替换为 -nums[i] 。
+重复这个过程恰好 k 次。可以多次选择同一个下标 i 。
+
+以这种方式修改数组后，返回数组 可能的最大和 。
+
+/*
+ * @lc app=leetcode.cn id=1005 lang=cpp
+ *
+ * [1005] K 次取反后最大化的数组和
+ */
+
+// @lc code=start
+class Solution {
+
+struct cmp
+{
+    bool operator()(const int a,const int b)
+    {
+        return a > b;
+    }
+
+};
+public:
+    int largestSumAfterKNegations(vector<int>& nums, int k) {
+        priority_queue<int,vector<int>,cmp> pq;
+
+        for(const auto& p:nums)
+        {
+            pq.push(p);
+        }
+
+        for(int i = k; i > 0; i--)
+        {
+            int temp = pq.top();
+            pq.pop();
+            pq.push(-temp);
+            // cout<<temp<<endl;
+        }
+
+        int result = 0;
+        while(!pq.empty())
+        {
+            result += pq.top();
+            pq.pop();
+        }
+
+        return result;
+    }
+};
+// @lc code=end
+
+思路：1，使用优先队列，先初始化，然后进行k次取反，对象为队列的最小值，最后累加求和
+      2，先进行绝对值从大到小排序，然后从左到右依次进行k次取反，如果k有剩余，则对最小值进行反复取反。
+时间复杂度：1,O(nlogn)
+            2,O(nlogn)
+空间复杂度：1，O(n)
+            2，O(n)
