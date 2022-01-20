@@ -1,0 +1,54 @@
+给定一个数组 prices ，其中 prices[i] 是一支给定股票第 i 天的价格。
+
+设计一个算法来计算你所能获取的最大利润。你可以尽可能地完成更多的交易（多次买卖一支股票）。
+
+注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+
+/*
+ * @lc app=leetcode.cn id=122 lang=cpp
+ *
+ * [122] 买卖股票的最佳时机 II
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+
+        int status = 0;
+        int result = 0;
+        int in_price = 0;
+
+        for(int i = 0; i < prices.size() - 1; i++)
+        {
+            if(status == 0)
+            {
+                if(prices[i+1] - prices[i] > 0)
+                {
+                    status = 1;
+                    in_price = prices[i];
+                }
+            }
+            else
+            {
+                if(prices[i+1] - prices[i] < 0)
+                {
+                    status = 0;
+                    result += prices[i] - in_price;
+                }
+            }
+        }
+
+        if(status == 1)
+        {
+            result += prices.back() - in_price;
+        }
+
+        return result;
+    }
+};
+// @lc code=end
+
+思路：模拟买入卖出，当今天的值小于明天的值时就买入，大于则卖出。该思路最终可以直接总结为，对前后两天的收益进行统计，只对正收益求和，更加简便。
+时间复杂度：O(n)
+空间复杂度：O(1)
