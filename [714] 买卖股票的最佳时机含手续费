@@ -1,0 +1,36 @@
+给定一个整数数组 prices，其中第 i 个元素代表了第 i 天的股票价格 ；整数 fee 代表了交易股票的手续费用。
+
+你可以无限次地完成交易，但是你每笔交易都需要付手续费。如果你已经购买了一个股票，在卖出它之前你就不能再继续购买股票了。
+
+返回获得利润的最大值。
+
+注意：这里的一笔交易指买入持有并卖出股票的整个过程，每笔交易你只需要为支付一次手续费。
+
+/*
+ * @lc app=leetcode.cn id=714 lang=cpp
+ *
+ * [714] 买卖股票的最佳时机含手续费
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int maxProfit(vector<int>& prices, int fee) {
+        vector<vector<int>> dp(prices.size(),vector<int>(2,0));
+
+        dp[0][0] -= prices[0];
+        for(int i = 1; i < prices.size(); i++)
+        {
+            dp[i][0] = max(dp[i-1][0],dp[i-1][1] - prices[i]);
+            dp[i][1] = max(dp[i-1][1],dp[i-1][0] + prices[i] - fee);
+        }
+
+        return max(dp[prices.size()-1][0],dp[prices.size()-1][1]);
+    }
+};
+// @lc code=end
+
+思路：该题不宜用贪心算法，情况较多。因此用动态规划来做。关键是写转移方程dp[i][0]表示当天买入后得现金最大值，dp[i][1]表示没买入的现金最大值。这么建模是因为一天只有两种选择，要么买要么
+不买，因此动态规划相当于把每天情况都推出来。
+时间复杂度：O(n)
+空间复杂度：O(n)
