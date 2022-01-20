@@ -1,0 +1,71 @@
+在柠檬水摊上，每一杯柠檬水的售价为 5 美元。顾客排队购买你的产品，（按账单 bills 支付的顺序）一次购买一杯。
+
+每位顾客只买一杯柠檬水，然后向你付 5 美元、10 美元或 20 美元。你必须给每个顾客正确找零，也就是说净交易是每位顾客向你支付 5 美元。
+
+注意，一开始你手头没有任何零钱。
+
+给你一个整数数组 bills ，其中 bills[i] 是第 i 位顾客付的账。如果你能给每位顾客正确找零，返回 true ，否则返回 false 。
+
+/*
+ * @lc app=leetcode.cn id=860 lang=cpp
+ *
+ * [860] 柠檬水找零
+ */
+
+// @lc code=start
+class Solution {
+public:
+    bool lemonadeChange(vector<int>& bills) {
+        unordered_map<int,int> cache;
+
+        for(const auto&bill:bills)
+        {
+            switch(bill)
+            {
+                case 5:
+                {
+                    cache[bill]++;
+                    break;
+                }
+                case 10:
+                {
+                    if(cache[5] > 0)
+                        cache[5]--;
+                    else
+                        return false;
+                    cache[10]++;
+                    break;
+                }
+                case 20:
+                {
+                    if(cache[10] > 0 && cache[5] > 0)
+                    {
+                        cache[10]--;
+                        cache[5]--;
+                    }
+                    else if(cache[5] > 2)
+                    {
+                        cache[5] -= 3;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    cache[20]++;
+                    break;
+                }
+                default:
+                    break;
+            }
+
+        }
+
+        return true;
+
+    }
+};
+// @lc code=end
+
+思路：使用穷举法，列出所有可能的找零情况，分别处理。其中，case20的时候，暗含了贪心算法的思路，因为找10块的优先级要大于找5块的。
+时间复杂度：O(n)
+空间复杂度：O(1)
