@@ -1,0 +1,40 @@
+给定一个非负整数 N，找出小于或等于 N 的最大的整数，同时这个整数需要满足其各个位数上的数字是单调递增。
+
+（当且仅当每个相邻位数上的数字 x 和 y 满足 x <= y 时，我们称这个整数是单调递增的。）
+
+/*
+ * @lc app=leetcode.cn id=738 lang=cpp
+ *
+ * [738] 单调递增的数字
+ */
+
+// @lc code=start
+class Solution {
+public:
+    int monotoneIncreasingDigits(int n) {
+        string in_s = to_string(n);
+
+        int flag_index = in_s.size();
+        for(int i = in_s.size()-1; i > 0; i--)
+        {
+            if(in_s[i-1] > in_s[i])
+            {
+                flag_index = i;
+                in_s[i-1]--;
+            }
+        }
+
+        for(int i = flag_index; i < in_s.size();i++)
+        {
+            in_s[i] = '9';
+        }
+
+
+        return stoi(in_s);
+    }
+};
+// @lc code=end
+
+思路：使用贪心思路，如果高一位的值大于当前位，则高位-1，当前位置9。从右往左遍历。需要注意的是，如果高位-1了，低位需要重新赋9，因此用一个flag_index记录最高位需要赋9的位置。
+时间复杂度：O(n)
+空间复杂度：O(n)
