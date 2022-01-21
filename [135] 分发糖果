@@ -1,0 +1,100 @@
+n 个孩子站成一排。给你一个整数数组 ratings 表示每个孩子的评分。
+
+你需要按照以下要求，给这些孩子分发糖果：
+
+每个孩子至少分配到 1 个糖果。
+相邻两个孩子评分更高的孩子会获得更多的糖果。
+请你给每个孩子分发糖果，计算并返回需要准备的 最少糖果数目 。
+
+/*
+ * @lc app=leetcode.cn id=135 lang=cpp
+ *
+ * [135] 分发糖果
+ */
+
+// @lc code=start
+class Solution {
+// public:
+//     vector<int> give_candy;
+//     int sum;
+public:
+    int candy(vector<int>& ratings) {
+        // if(ratings.size() == 1)
+        //     return 1;
+        // sum = 0;
+        // backtrack(ratings);
+        // return sum;
+
+        //use greedy
+        vector<int> give_candy(ratings.size(),1);
+        if(ratings.size() == 1)
+            return 1;
+
+        //from left to right
+        for(int i = 1; i < ratings.size(); i++)
+        {
+            if(ratings[i] > ratings[i-1])
+            {
+                give_candy[i] = give_candy[i-1] + 1;
+            }
+        }
+
+        //from right to left
+        for(int i = ratings.size()-2; i >= 0; i--)
+        {
+            if(ratings[i] > ratings[i+1])
+            {
+                give_candy[i] = max(give_candy[i],give_candy[i+1]+1);
+            }
+        }
+
+        int sum = 0;
+        for(const auto&p:give_candy)
+            sum += p;
+
+        return sum;
+    }
+
+    // bool backtrack(vector<int>& ratings)
+    // {
+    //     if(give_candy.size() > 1)
+    //     {
+    //         int a = ratings[give_candy.size()-1] - ratings[give_candy.size()-2];
+    //         int b = give_candy[give_candy.size()-1] - give_candy[give_candy.size()-2];
+            
+    //         if(a != 0 && b == 0)
+    //             return false;
+    //         if(a * b < 0)
+    //             return false;
+
+    //         if(give_candy.size() == ratings.size())
+    //             return true;
+    //     }
+
+    //     for(int i = 1;;i++)
+    //     {
+    //         if(give_candy.size() > 0)
+    //         {
+    //             if(ratings[give_candy.size()] < ratings[give_candy.size()-1])
+    //             {
+    //                 if(i >= give_candy[give_candy.size()-1])
+    //                     break;
+    //             }
+    //         }
+            
+    //         give_candy.push_back(i);
+    //         sum += i;
+    //         if(backtrack(ratings) == true)
+    //             return true;
+    //         give_candy.pop_back();
+    //         sum -= i;
+    //     }
+    //     return false;
+    // }
+};
+// @lc code=end
+
+思路：先使用回溯法来遍历所有解，由于for循环是从小到大遍历，所以找到的第一个解就是最优解。但是某些case超时。因此使用两次贪心算法，先从左到右，如果i大于i-1，则多给一个糖。再从右到左，
+如果i大于i+1，则多给一个糖，但是要保证之前的条件成立，所以还要和之前算出来的i进行比较，取较大值。
+时间复杂度：O(n)
+空间复杂度：O(n)
