@@ -1,0 +1,44 @@
+给定一个区间的集合，找到需要移除区间的最小数量，使剩余区间互不重叠。
+
+注意:
+
+可以认为区间的终点总是大于它的起点。
+区间 [1,2] 和 [2,3] 的边界相互“接触”，但没有相互重叠。
+
+/*
+ * @lc app=leetcode.cn id=435 lang=cpp
+ *
+ * [435] 无重叠区间
+ */
+
+// @lc code=start
+class Solution {
+public:
+
+    static bool cmp(const vector<int>& a,const vector<int>& b)
+    {
+        return a[0] < b[0];    
+    }
+
+    int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+
+        sort(intervals.begin(),intervals.end(),cmp);
+
+        int result = 0;
+        for(int i = 1; i < intervals.size(); i++)
+        {
+            if(intervals[i][0] < intervals[i-1][1])
+            {
+                result++;
+                intervals[i][1] = min(intervals[i][1],intervals[i-1][1]);
+            }
+        }
+
+        return result;
+    }
+};
+// @lc code=end
+
+思路:使用贪心思路,类似于打气球,先进行左边界排序,然后依次判断,如果当前左边界小于前一个的右边界,则需要剔除一个,并且当前右边界取最小值.
+时间复杂度:O(nlogn)
+空间复杂度:O(1)
